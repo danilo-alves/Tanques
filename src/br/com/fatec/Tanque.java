@@ -12,32 +12,51 @@ public class Tanque {
 	private double x,y;
 	private double angulo;
 	private double velocidade;
+
 	private Color cor;
 	private boolean estaAtivo;
+	
 	public Tanque(int x, int y, int a, Color cor){
 		this.x = x; this.y = y; this.angulo = 90-a;
 		this.cor = cor; velocidade = 10;
 		this.estaAtivo = false;
 	}
+	
 	public void aumentarVelocidade(){
 		velocidade++;
 	}
+	
 	public void girarHorario(int a){
 		angulo += a;
+		System.out.println("Angulo: " + angulo);
 	}
+	
 	public void girarAntiHorario(int a){
 		angulo -= a;
+		System.out.println("Angulo: " + angulo);
 	}
+	
 	public void mover(){
 		x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
-		y = y - Math.sin(Math.toRadians(angulo)) * velocidade;
+		y = y - Math.cos(Math.toRadians(angulo)) * velocidade;
 	}
+	
 	public void setEstaAtivo(boolean estaAtivo){
 		this.estaAtivo = estaAtivo;
 	}
+	
 	public boolean getEstaAtivo(){
 		return this.estaAtivo;
 	}
+	
+	public double getVelocidade() {
+		return velocidade;
+	}
+
+	public void setVelocidade(double velocidade) {
+		this.velocidade = velocidade;
+	}
+	
 	public void draw(Graphics2D g2d){
 		//Armazenamos o sistema de coordenadas original.
 		AffineTransform antes = g2d.getTransform();
@@ -86,8 +105,14 @@ public class Tanque {
 		Rectangle rect = new Rectangle(-24,-32,48,55);
 		return at.createTransformedShape(rect);
 	}
+	
 	public void atirar() {
-		// TODO Auto-generated method stub
+		// TODO Implementar método atirar()
 		System.out.println("Tanque atirou!");
+	}
+
+	public void reverso() {
+		x = x + Math.sin(Math.toRadians(angulo)) * (velocidade * -1);
+		y = y - Math.cos(Math.toRadians(angulo)) * (velocidade * -1);		
 	}
 }

@@ -24,27 +24,34 @@ public class Arena extends JComponent
 	private int largura,altura;
 	private HashSet<Tanque> tanques;
 	private Timer contador;
+	
 	public Arena(int largura,int altura){
 		this.largura = largura;
 		this.altura = altura;
 		tanques = new HashSet<Tanque>();
 		addMouseListener(this);
 		addKeyListener(this);
+		this.setFocusable(true); // Mac OS n‹o reconhece os eventos de teclado sem isso
 		contador = new Timer(500,this);
 		contador.start();
 	}
+	
 	public void adicionaTanque(Tanque t){
 		tanques.add(t);
 	}
+	
 	public Dimension getMaximumSize(){
 		return getPreferredSize();
 	}
+	
 	public Dimension getMinimumSize(){
 		return getPreferredSize();
 	}
+	
 	public Dimension getPreferredSize(){
 		return new Dimension(largura,altura);
 	}
+	
 	@Override
 	protected void paintComponent(Graphics g){
 		super.paintComponent(g);
@@ -61,6 +68,7 @@ public class Arena extends JComponent
 		// Desenhamos todos os tanques
 		for(Tanque t:tanques) t.draw(g2d);
 	}
+	
 	public void mouseClicked(MouseEvent e){
 		for(Tanque t:tanques)
 			t.setEstaAtivo(false);
@@ -78,51 +86,45 @@ public class Arena extends JComponent
 		}
 		repaint();
 	}
+	
 	public void mouseEntered(MouseEvent e) { }
 	public void mouseExited(MouseEvent e) { }
 	public void mousePressed(MouseEvent e) { }
 	public void mouseReleased(MouseEvent e) { }
+	
 	public void actionPerformed(ActionEvent e){
-		for(Tanque t:tanques)
-			t.mover();
+//		for(Tanque t:tanques)
+//			t.mover();		
 		repaint();
-	}
-
-	public static void main(String args[]){
-		Arena arena = new Arena(600,400);
-		arena.adicionaTanque(new Tanque(100,200,0,Color.BLUE));
-		arena.adicionaTanque(new Tanque(200,200,45,Color.RED));
-		arena.adicionaTanque(new Tanque(470,360,90,Color.GREEN));
-		arena.adicionaTanque(new Tanque(450,50,157,Color.YELLOW));
-		JFrame janela = new JFrame("Tanques");
-		janela.getContentPane().add(arena);
-		janela.pack();
-		janela.setVisible(true);
-		janela.setDefaultCloseOperation(3);
+		
+//		TODO: Verificar colisao entre os tanques
 	}
 	
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println(e.getKeyChar());
-	}
-	
-	@Override
-	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void keyTyped(KeyEvent e) {
 		for(Tanque t:tanques){
 			boolean clicado = t.getEstaAtivo();
 			if (clicado){
 				switch(e.getKeyCode()){
-					case KeyEvent.VK_0: t.atirar(); break;
+					case KeyEvent.VK_SPACE: t.atirar(); break;
+					case KeyEvent.VK_UP: t.mover(); break;
+					case KeyEvent.VK_LEFT: t.girarAntiHorario(3); break;
+					case KeyEvent.VK_RIGHT: t.girarHorario(3); break;
+					case KeyEvent.VK_DOWN:  t.reverso(); break;
 				}
 				break;
 			}
 		}
 		repaint();
+	}
+	
+	@Override
+	public void keyReleased(KeyEvent e) {
+//		System.out.println("->" + e.getKeyChar());		
+	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
 	}
 }
