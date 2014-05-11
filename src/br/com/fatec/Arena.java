@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.RenderingHints.Key;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -15,7 +14,6 @@ import java.awt.event.MouseListener;
 import java.util.HashSet;
 
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.Timer;
 
 @SuppressWarnings("serial")
@@ -108,10 +106,10 @@ public class Arena extends JComponent
 			if (clicado){
 				switch(e.getKeyCode()){
 					case KeyEvent.VK_SPACE: t.atirar(); break;
-					case KeyEvent.VK_UP: t.mover(); break;
+					case KeyEvent.VK_UP: if(estaLimiteArena(t, false)) t.mover(); break;
 					case KeyEvent.VK_LEFT: t.girarAntiHorario(3); break;
 					case KeyEvent.VK_RIGHT: t.girarHorario(3); break;
-					case KeyEvent.VK_DOWN:  t.reverso(); break;
+					case KeyEvent.VK_DOWN:  if(estaLimiteArena(t, true)) t.reverso(); break;
 				}
 				break;
 			}
@@ -119,6 +117,12 @@ public class Arena extends JComponent
 		repaint();
 	}
 	
+	private boolean estaLimiteArena(Tanque t, boolean reverso) {
+		// Veirifica os limites da arena
+		return	(	(t.nextX(reverso) > 10 && t.nextX(reverso) < this.largura-10) &&
+				(t.nextY(reverso) > 10 && t.nextY(reverso) < this.altura-10));		
+	}
+
 	@Override
 	public void keyReleased(KeyEvent e) {
 //		System.out.println("->" + e.getKeyChar());		

@@ -28,17 +28,17 @@ public class Tanque {
 	
 	public void girarHorario(int a){
 		angulo += a;
-		System.out.println("Angulo: " + angulo);
 	}
 	
 	public void girarAntiHorario(int a){
 		angulo -= a;
-		System.out.println("Angulo: " + angulo);
 	}
 	
 	public void mover(){
 		x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
 		y = y - Math.cos(Math.toRadians(angulo)) * velocidade;
+		
+		System.out.println("X: " + x + " - Y: " + y);
 	}
 	
 	public void setEstaAtivo(boolean estaAtivo){
@@ -113,6 +113,40 @@ public class Tanque {
 
 	public void reverso() {
 		x = x + Math.sin(Math.toRadians(angulo)) * (velocidade * -1);
-		y = y - Math.cos(Math.toRadians(angulo)) * (velocidade * -1);		
+		y = y - Math.cos(Math.toRadians(angulo)) * (velocidade * -1);	
+		
+		System.out.println("X: " + x + " - Y: " + y);
+	}
+
+	public double getX() {
+		return x;
+	}
+
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public double getY() {
+		return y;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
+	public double getAngulo() {
+		return angulo;
+	}
+
+	public void setAngulo(double angulo) {
+		this.angulo = angulo;
+	}
+	
+	public double nextX(boolean reverso) {
+		return x + Math.sin(Math.toRadians(angulo)) * (velocidade * (reverso? -1:1));
+	}
+
+	public double nextY(boolean reverso) {
+		return y - Math.cos(Math.toRadians(angulo)) * (velocidade * (reverso? -1:1));
 	}
 }
