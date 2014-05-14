@@ -18,12 +18,15 @@ public class Tanque {
 	
 	public Tanque(int x, int y, int a, Color cor){
 		this.x = x; this.y = y; this.angulo = 90-a;
-		this.cor = cor; velocidade = 10;
+		this.cor = cor; velocidade = 0;
 		this.estaAtivo = false;
 	}
 	
 	public void aumentarVelocidade(){
-		velocidade++;
+		// limita a velocidade
+		if(velocidade <= 20)
+			velocidade += 0.5;
+		System.out.println("Velocidade: " + velocidade);
 	}
 	
 	public void girarHorario(int a){

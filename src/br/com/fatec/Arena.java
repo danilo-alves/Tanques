@@ -106,10 +106,10 @@ public class Arena extends JComponent
 			if (clicado){
 				switch(e.getKeyCode()){
 					case KeyEvent.VK_SPACE: t.atirar(); break;
-					case KeyEvent.VK_UP: if(estaLimiteArena(t, false)) t.mover(); break;
+					case KeyEvent.VK_UP: if(estaLimiteArena(t, false)){ t.aumentarVelocidade(); t.mover(); } break;
 					case KeyEvent.VK_LEFT: t.girarAntiHorario(3); break;
 					case KeyEvent.VK_RIGHT: t.girarHorario(3); break;
-					case KeyEvent.VK_DOWN:  if(estaLimiteArena(t, true)) t.reverso(); break;
+					case KeyEvent.VK_DOWN:  if(estaLimiteArena(t, true)){ t.aumentarVelocidade(); t.reverso(); } break;
 				}
 				break;
 			}
@@ -125,7 +125,20 @@ public class Arena extends JComponent
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-//		System.out.println("->" + e.getKeyChar());		
+		for(Tanque t:tanques){
+			boolean clicado = t.getEstaAtivo();
+			if (clicado){
+				switch(e.getKeyCode()){
+					case KeyEvent.VK_SPACE: t.atirar(); break;
+					case KeyEvent.VK_UP: t.setVelocidade(0); break;
+					case KeyEvent.VK_LEFT: t.girarAntiHorario(3); break;
+					case KeyEvent.VK_RIGHT: t.girarHorario(3); break;
+					case KeyEvent.VK_DOWN:  t.setVelocidade(0); break;
+				}
+				break;
+			}
+		}
+		repaint();
 	}
 	
 	@Override
