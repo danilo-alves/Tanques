@@ -91,10 +91,15 @@ public class Arena extends JComponent
 	public void mouseReleased(MouseEvent e) { }
 	
 	public void actionPerformed(ActionEvent e){
-//		for(Tanque t:tanques)
-//			t.mover();		
-		repaint();
+		for(Tanque t:tanques){
+			if(estaLimiteArena(t, false) && !t.getEstaAtivo()){
+				// TODO: Mudar tanque de sentido
+				
+			}
+			t.mover();		
+		}
 		
+		repaint();
 //		TODO: Verificar colisao entre os tanques
 	}
 	
