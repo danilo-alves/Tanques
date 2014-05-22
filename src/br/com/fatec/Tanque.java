@@ -8,17 +8,18 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 
-public class Tanque {
+public class Tanque implements Runnable{
 	private double x,y;
 	private double angulo;
 	private double velocidade;
+	private Projetil projetil;
 
 	private Color cor;
 	private boolean estaAtivo;
 	
 	public Tanque(int x, int y, int a, Color cor){
 		this.x = x; this.y = y; this.angulo = 90-a;
-		this.cor = cor; velocidade = 0;
+		this.cor = cor; velocidade = 5;
 		this.estaAtivo = false;
 	}
 	
@@ -41,7 +42,7 @@ public class Tanque {
 		x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
 		y = y - Math.cos(Math.toRadians(angulo)) * velocidade;
 		
-		System.out.println("X: " + x + " - Y: " + y);
+		System.out.println("X: " + x + " - Y: " + y + " Angulo: " +  this.getAngulo());
 	}
 	
 	public void setEstaAtivo(boolean estaAtivo){
@@ -112,13 +113,14 @@ public class Tanque {
 	public void atirar() {
 		// TODO Implementar método atirar()
 		System.out.println("Tanque atirou!");
+		this.projetil = new Projetil(this.x, this.y, this.angulo, this.cor);
 	}
 
 	public void reverso() {
 		x = x + Math.sin(Math.toRadians(angulo)) * (velocidade * -1);
 		y = y - Math.cos(Math.toRadians(angulo)) * (velocidade * -1);	
 		
-		System.out.println("X: " + x + " - Y: " + y);
+		System.out.println("X: " + x + " - Y: " + y + " Angulo: " +  this.getAngulo());
 	}
 
 	public double getX() {
@@ -146,10 +148,31 @@ public class Tanque {
 	}
 	
 	public double nextX(boolean reverso) {
-		return x + Math.sin(Math.toRadians(angulo)) * (velocidade * (reverso? -1:1));
+		return x + Math.sin(Math.toRadians(angulo)) * (velocidade * (reverso? -1 : 1));
 	}
 
 	public double nextY(boolean reverso) {
-		return y - Math.cos(Math.toRadians(angulo)) * (velocidade * (reverso? -1:1));
+		return y - Math.cos(Math.toRadians(angulo)) * (velocidade * (reverso? -1 : 1));
+	}
+
+	public void mudarSentido(){
+		if(this.getAngulo() % 360 <= 0)
+			this.setAngulo(this.getAngulo() - 5);
+		else
+			this.setAngulo(this.getAngulo() + 5);
+	}
+	
+	@Override
+	public void run() {
+		//
+		
+	}
+
+	public Projetil getProjetil() {
+		return projetil;
+	}
+
+	public void setProjetil(Projetil projetil) {
+		this.projetil = projetil;
 	}
 }

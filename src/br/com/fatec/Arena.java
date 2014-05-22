@@ -21,12 +21,14 @@ public class Arena extends JComponent
 		implements MouseListener, ActionListener, KeyListener{
 	private int largura,altura;
 	private HashSet<Tanque> tanques;
+	private HashSet<Projetil> projeteis;
 	private Timer contador;
 	
 	public Arena(int largura,int altura){
 		this.largura = largura;
 		this.altura = altura;
 		tanques = new HashSet<Tanque>();
+		projeteis = new HashSet<Projetil>();
 		addMouseListener(this);
 		addKeyListener(this);
 		this.setFocusable(true); // Mac OS n‹o reconhece os eventos de teclado sem isso
@@ -64,7 +66,15 @@ public class Arena extends JComponent
 		for(int _altura=0;_altura<=altura;_altura+=20)
 			g2d.drawLine(0,_altura,largura,_altura);
 		// Desenhamos todos os tanques
-		for(Tanque t:tanques) t.draw(g2d);
+		for(Tanque t:tanques){ 
+			t.draw(g2d);
+			
+			if(t.getProjetil() != null)
+				t.getProjetil().draw(g2d);
+		}
+		
+		if(!projeteis.isEmpty())
+			for(Projetil p:projeteis) p.draw(g2d);
 	}
 	
 	public void mouseClicked(MouseEvent e){
@@ -92,11 +102,22 @@ public class Arena extends JComponent
 	
 	public void actionPerformed(ActionEvent e){
 		for(Tanque t:tanques){
-			if(estaLimiteArena(t, false) && !t.getEstaAtivo()){
-				// TODO: Mudar tanque de sentido
-				
+			if(this.estaLimiteArena(t, false)){
+				t.mover();
 			}
-			t.mover();		
+			else{
+				// TODO: Mudar tanque de sentido
+				t.mudarSentido();
+			}					
+			
+			// verifica de ainda esta colidindo com o limite se nao movimenta
+			if(!this.estaLimiteArena(t, false)){
+				// TODO: Obter angulo de reflexao
+				if(t.getAngulo() % 360 <= 0)
+					t.setAngulo(t.getAngulo() - 10);
+				else
+					t.setAngulo(t.getAngulo() + 10);
+			}
 		}
 		
 		repaint();
@@ -110,7 +131,6 @@ public class Arena extends JComponent
 			boolean clicado = t.getEstaAtivo();
 			if (clicado){
 				switch(e.getKeyCode()){
-					case KeyEvent.VK_SPACE: t.atirar(); break;
 					case KeyEvent.VK_UP: if(estaLimiteArena(t, false)){ t.aumentarVelocidade(); t.mover(); } break;
 					case KeyEvent.VK_LEFT: t.girarAntiHorario(3); break;
 					case KeyEvent.VK_RIGHT: t.girarHorario(3); break;
@@ -134,7 +154,7 @@ public class Arena extends JComponent
 			boolean clicado = t.getEstaAtivo();
 			if (clicado){
 				switch(e.getKeyCode()){
-					case KeyEvent.VK_SPACE: t.atirar(); break;
+					case KeyEvent.VK_SPACE: t.atirar(); repaint(); break;
 					case KeyEvent.VK_UP: t.setVelocidade(0); break;
 					case KeyEvent.VK_LEFT: t.girarAntiHorario(3); break;
 					case KeyEvent.VK_RIGHT: t.girarHorario(3); break;
