@@ -114,6 +114,8 @@ public class Tanque implements Runnable{
 		// TODO Implementar método atirar()
 		System.out.println("Tanque atirou!");
 		this.projetil = new Projetil(this.x, this.y, this.angulo, this.cor);
+		//Thread t = new Thread((Runnable) projetil);
+		//t.start();
 	}
 
 	public void reverso() {
@@ -164,7 +166,6 @@ public class Tanque implements Runnable{
 	
 	@Override
 	public void run() {
-		//
 		
 	}
 

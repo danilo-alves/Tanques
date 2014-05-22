@@ -1,14 +1,12 @@
 package br.com.fatec;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 
-public class Projetil {
+public class Projetil implements Runnable{
 		private double x,y;
 		private double angulo;
 		private double velocidade;
@@ -18,8 +16,8 @@ public class Projetil {
 		
 		public Projetil(double x, double y, double a, Color cor){
 			this.x = x; this.y = y; this.angulo = a;
-			this.cor = cor; velocidade = 5;
-			this.estaAtivo = false;
+			this.cor = cor; velocidade = 40;
+			this.estaAtivo = true;
 		}
 		
 		public void aumentarVelocidade(){
@@ -69,11 +67,14 @@ public class Projetil {
 			depois.rotate(Math.toRadians(angulo));
 			//Aplicamos o sistema de coordenadas.
 			g2d.transform(depois);
+			
 			//O canh�o
-			g2d.setColor(Color.LIGHT_GRAY);
-			g2d.fillRect(-3, -25, 6, 25);
+			g2d.fillOval(-3, -25, 10, 10);
 			g2d.setColor(cor);
-			g2d.drawRect(-3, -25, 6, 25);
+			//g2d.drawOval(-3, -25, 10, 10);
+			 //g2d.fillRect(-3, -25, 6, 25);
+		     //g2d.setColor(cor);
+     		 //g2d.drawRect(-3, -25, 6, 25);
 			//Aplicamos o sistema de coordenadas
 			g2d.setTransform(antes);
 		}
@@ -130,5 +131,10 @@ public class Projetil {
 				this.setAngulo(this.getAngulo() - 5);
 			else
 				this.setAngulo(this.getAngulo() + 5);
+		}
+
+		@Override
+		public void run() {
+			mover();
 		}
 }

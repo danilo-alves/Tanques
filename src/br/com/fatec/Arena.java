@@ -102,12 +102,17 @@ public class Arena extends JComponent
 	
 	public void actionPerformed(ActionEvent e){
 		for(Tanque t:tanques){
+			if (t.getProjetil() != null) {
+				if (t.getProjetil().getEstaAtivo()) t.getProjetil().mover();
+			}
 			if(this.estaLimiteArena(t, false)){
 				t.mover();
+				
 			}
 			else{
 				// TODO: Mudar tanque de sentido
 				t.mudarSentido();
+				//if (t.getProjetil().getEstaAtivo()) t.getProjetil().setEstaAtivo(false);
 			}					
 			
 			// verifica de ainda esta colidindo com o limite se nao movimenta
