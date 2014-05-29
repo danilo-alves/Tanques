@@ -8,59 +8,92 @@ import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 
-public class Tanque implements Runnable{
-	private double x,y;
-	private double angulo;
-	private double velocidade;
-	private Projetil projetil;
+public class Tanque {
+	private double x,y; 		// Position
+	private double angulo;		// Attitude
+	private double velocidade;	// Linear speed
+	private Color cor;			// Color
+	private boolean estaAtivo;	// Current selection status
+	public static final double deltaV = 1; // Linear speed increment
 
-	private Color cor;
-	private boolean estaAtivo;
-	
-	public Tanque(int x, int y, int a, Color cor){
-		this.x = x; this.y = y; this.angulo = 90-a;
-		this.cor = cor; velocidade = 5;
+	/* Main constructor: */
+	/* a = angle, in degrees, measured counter clockwise. */
+	public Tanque(int posX, int posY, int atAngle, int speedMod,  Color cor){
+		this.x = posX;
+		this.y = posY;
+		this.angulo = atAngle;
+		this.cor = cor;
+		this.velocidade = speedMod;
 		this.estaAtivo = false;
 	}
-	
-	public void aumentarVelocidade(){
-		// limita a velocidade
-		if(velocidade <= 20)
-			velocidade += 0.5;
-		System.out.println("Velocidade: " + velocidade);
+
+	/* Get linear position. It must be remarked that
+	 * linear position setting is performed using  mover()
+	 * method when tank opperates in normal conditions.*/
+	public double [] getPosition()
+	{
+		double [] position = new double[2];
+		position[0] = this.x;
+		position[1] = this.y;
+		return position;
 	}
-	
+
+	public void setPosition(double x, double y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+
+	/* Returns the current tank's attitude (orientation
+	 * angle) */
+	public double getAttitude()
+	{
+		return this.angulo;
+	}
+
+	/* Sets the current tank's attitude (orientation angle) */
+	public void setAttitude(double attitude)
+	{
+		this.angulo = attitude;
+ 	}
+
+	/* Linear speed modulus increment */
+	public void aumentarVelocidade(){
+		this.velocidade = velocidade + deltaV;
+	}
+
+	/* Linear speed modulus decrement */
+	public void diminuirVelocidade()
+	{
+		this.velocidade = velocidade - deltaV;
+		if(this.velocidade < 0) //Avoids negative speed modulus
+		{
+			this.velocidade = 0;
+		}
+	}
 	public void girarHorario(int a){
 		angulo += a;
 	}
-	
 	public void girarAntiHorario(int a){
 		angulo -= a;
 	}
-	
+
+	/* Tank's movement takes into account the fact that
+	 * linear speed coordinate system is equivalent to
+	 * position coordinate system rotated by 90degrees */
 	public void mover(){
-		x = x + Math.sin(Math.toRadians(angulo)) * velocidade;
-		y = y - Math.cos(Math.toRadians(angulo)) * velocidade;
-		
-		System.out.println("X: " + x + " - Y: " + y + " Angulo: " +  this.getAngulo());
+		x = x + Math.sin(Math.toRadians(angulo)) * this.velocidade;
+		y = y - Math.cos(Math.toRadians(angulo)) * this.velocidade;
 	}
-	
 	public void setEstaAtivo(boolean estaAtivo){
 		this.estaAtivo = estaAtivo;
 	}
-	
-	public boolean getEstaAtivo(){
+
+	public boolean getActivationStatus()
+	{
 		return this.estaAtivo;
 	}
-	
-	public double getVelocidade() {
-		return velocidade;
-	}
 
-	public void setVelocidade(double velocidade) {
-		this.velocidade = velocidade;
-	}
-	
 	public void draw(Graphics2D g2d){
 		//Armazenamos o sistema de coordenadas original.
 		AffineTransform antes = g2d.getTransform();
@@ -108,72 +141,5 @@ public class Tanque implements Runnable{
 		at.rotate(Math.toRadians(angulo));
 		Rectangle rect = new Rectangle(-24,-32,48,55);
 		return at.createTransformedShape(rect);
-	}
-	
-	public void atirar() {
-		// TODO Implementar método atirar()
-		System.out.println("Tanque atirou!");
-		this.projetil = new Projetil(this.x, this.y, this.angulo, this.cor);
-		//Thread t = new Thread((Runnable) projetil);
-		//t.start();
-	}
-
-	public void reverso() {
-		x = x + Math.sin(Math.toRadians(angulo)) * (velocidade * -1);
-		y = y - Math.cos(Math.toRadians(angulo)) * (velocidade * -1);	
-		
-		System.out.println("X: " + x + " - Y: " + y + " Angulo: " +  this.getAngulo());
-	}
-
-	public double getX() {
-		return x;
-	}
-
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	public double getY() {
-		return y;
-	}
-
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	public double getAngulo() {
-		return angulo;
-	}
-
-	public void setAngulo(double angulo) {
-		this.angulo = angulo;
-	}
-	
-	public double nextX(boolean reverso) {
-		return x + Math.sin(Math.toRadians(angulo)) * (velocidade * (reverso? -1 : 1));
-	}
-
-	public double nextY(boolean reverso) {
-		return y - Math.cos(Math.toRadians(angulo)) * (velocidade * (reverso? -1 : 1));
-	}
-
-	public void mudarSentido(){
-		if(this.getAngulo() % 360 <= 0)
-			this.setAngulo(this.getAngulo() - 5);
-		else
-			this.setAngulo(this.getAngulo() + 5);
-	}
-	
-	@Override
-	public void run() {
-		
-	}
-
-	public Projetil getProjetil() {
-		return projetil;
-	}
-
-	public void setProjetil(Projetil projetil) {
-		this.projetil = projetil;
 	}
 }
